@@ -1,0 +1,18 @@
+name: build
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v3.5.2
+
+      - name: Format the source code and check for differences
+        run: go fmt ./... && git diff --exit-code HEAD
+
+      - name: Run unit tests
+        run: go test -v ./...
