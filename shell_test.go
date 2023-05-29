@@ -17,3 +17,15 @@ func TestRun(t *testing.T) {
 		require.ErrorContains(t, err, "exit status")
 	})
 }
+
+func TestRunSilently(t *testing.T) {
+	t.Run("RunSuccessfully", func(t *testing.T) {
+		err := RunSilently("go", "version")
+		require.NoError(t, err)
+	})
+
+	t.Run("RunWithError", func(t *testing.T) {
+		err := RunSilently("go", "invalid")
+		require.ErrorContains(t, err, "exit status")
+	})
+}
