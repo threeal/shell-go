@@ -2,6 +2,7 @@
 package shell
 
 import (
+	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -21,6 +22,18 @@ func Run(name string, args ...string) error {
 func RunSilently(name string, args ...string) error {
 	cmd := exec.Command(name, args...)
 	return cmd.Run()
+}
+
+// Output executes a shell command, returning its output as a string
+// and displaying its output to the current process's standard output.
+// It returns an error if the command execution fails.
+func Output(name string, args ...string) (string, error) {
+	cmd := exec.Command(name, args...)
+	var out strings.Builder
+	cmd.Stdout = io.MultiWriter(&out, os.Stdout)
+	cmd.Stderr = io.MultiWriter(&out, os.Stderr)
+	err := cmd.Run()
+	return out.String(), err
 }
 
 // OutputSilently executes a shell command silently and returns its output as a string.
