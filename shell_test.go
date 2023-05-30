@@ -41,3 +41,23 @@ func TestRunSilently(t *testing.T) {
 		require.Empty(t, read())
 	})
 }
+
+func TestOutputSilently(t *testing.T) {
+	t.Run("RunSuccessfully", func(t *testing.T) {
+		read, restore := requirePipeOutput(t)
+		defer restore()
+		output, err := OutputSilently("go", "version")
+		require.NoError(t, err)
+		require.Regexp(t, "^go version go\\S+ \\S+\n$", output)
+		require.Empty(t, read())
+	})
+
+	t.Run("RunWithError", func(t *testing.T) {
+		read, restore := requirePipeOutput(t)
+		defer restore()
+		output, err := OutputSilently("go", "invalid")
+		require.ErrorContains(t, err, "exit status")
+		require.Regexp(t, "^go invalid: unknown command\nRun 'go help' for usage.\n$", output)
+		require.Empty(t, read())
+	})
+}
