@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repository
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
 
       - name: Format the source code and check for differences
         run: go fmt ./... && git diff --exit-code HEAD
